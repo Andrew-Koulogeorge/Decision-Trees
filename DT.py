@@ -1,6 +1,9 @@
 import math
 import numpy as np
 from collections import Counter
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+
 class Node:
     def __init__(self, feature=None, threshold=None, left=None, right=None, val=None) -> None:
         # feature this was split on
@@ -122,3 +125,19 @@ class DecisionTree:
         # assuming we are doing classification and not regression; taking majority vote of label
         value = max([(freq,val) for val, freq in Counter(y).items()])[1]
         return value
+
+
+if __name__ == "__main__":
+        # load in new dataset
+    data = datasets.load_breast_cancer()
+    X,y = data.data, data.target
+    # split train and test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=15213)
+
+    # make instance of DT 
+    h = DecisionTree()
+    h.fit(X_train, y_train)
+    y_hat = h.predict(X_test)
+    print(np.sum(y_hat == y_test) / len(y_hat))
+
+    # compute performance
